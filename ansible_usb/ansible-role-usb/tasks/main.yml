@@ -1,0 +1,37 @@
+---
+
+
+- name: Prompt the user to insert device
+  pause:
+    prompt: "Please, insert your USB device and press Enter"
+ 
+- name: Checking connected USB Device
+  shell: ls -l /dev/disk/by-id/ | grep usb
+  register: usb_devices_before
+
+- name: Prompt the user to delete  device 
+  pause:
+    prompt: "Please, delete your USB device and press Enter"
+
+- name: Checking disconnection USB Device                        
+  shell: ls -l /dev/disk/by-id/ | grep usb
+  register: usb_devices_after
+  failed_when: "usb_devices_before.stdout == usb_devices_after.stdout"
+
+- name: Prompt return USB device
+  pause:
+    prompt: " Please, return USB device and press Enter"
+
+- name: Wait for the system to update settings
+  pause:
+    seconds: 5
+
+- name: Checking that the same USB device is inserted
+  shell: ls -l /dev/disk/by-id/ | grep usb
+  register: usb_devices_after_return
+  failed_when: "usb_devices_before.stdout != usb_devices_after_return.stdout"
+
+- name: Output of a success message
+  debug:
+    msg: "The USB device was successfully removed and then connected again"
+...

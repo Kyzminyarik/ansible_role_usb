@@ -1,0 +1,9 @@
+---
+- name: USB Task 
+  hosts: myhosts
+  gather_facts: no
+
+  roles:
+
+    - ansible-role-usb
+...
